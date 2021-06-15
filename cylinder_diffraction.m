@@ -7,8 +7,11 @@ function [eta_scattered] = cylinder_diffraction(Nseries, r, theta, k, a)
         deltam = 1 + (m>0);
         eta_r = besselh(m, 1, k*r);
         eta_theta = cos(m*theta);
-        A_m = - (besselj(m, k*a+dx)-besselj(m, k*a))/...
-            (besselh(m, 1, k*a+dx)-besselh(m, 1, k*a));
+        %bad idea! gives NaN for low values of k*a
+%         A_m = - (besselj(m, k*a+dx)-besselj(m, k*a))/...
+%             (besselh(m, 1, k*a+dx)-besselh(m, 1, k*a));
+        A_m = - (besselj(m-1, k*a)-besselj(m+1, k*a))/...
+            (besselh(m-1, 1, k*a)-besselh(m+1, 1, k*a));
         eta_scattered = eta_scattered + deltam*(1i)^m*A_m*eta_r.*eta_theta;
     end
 end
